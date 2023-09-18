@@ -18,34 +18,44 @@ import UserItem from '../users/UserItem.vue';
 export default {
   inject: ['users', 'teams'],
   components: {
-    UserItem
+    UserItem,
   },
   data() {
     return {
-     members: [],
-     teamName: ''
+      members: [],
+      teamName: '',
     };
   },
- created() {
-  const teamId = this.$route.params.teamId;
-  const selectedTeam = this.teams.find(team => team.id === teamId);
+  methods: {
+    loadMembers() {
+      const teamId = this.$route.params.teamId;
+      const selectedTeam = this.teams.find((team) => team.id === teamId);
 
-  if (selectedTeam) {
-    const members = selectedTeam.members;
-    const selectedMembers = [];
-    for (const member of members) {
-      const selectedUser = this.users.find(user => user.id === member);
-      if (selectedUser) {
-        selectedMembers.push(selectedUser);
+      if (selectedTeam) {
+        const members = selectedTeam.members;
+        const selectedMembers = [];
+        for (const member of members) {
+          const selectedUser = this.users.find((user) => user.id === member);
+          if (selectedUser) {
+            selectedMembers.push(selectedUser);
+          }
+        }
+        this.members = selectedMembers;
+        this.teamName = selectedTeam.name;
+      } else {
+        // Handle the case when the selected team is not found
+        console.error('Selected team not found');
       }
-    }
-    this.members = selectedMembers;
-    this.teamName = selectedTeam.name;
-  } else {
-    // Handle the case when the selected team is not found
-    console.error('Selected team not found');
-  }
-}
+    },
+  },
+  created() {
+    this.loadMembers(this.$route);
+  },
+  watch: {
+    $route(newRoute) {
+      this.loadMembers(newRoute);
+    },
+  },
 };
 </script>
 
