@@ -1,4 +1,5 @@
 <template>
+<button @click="programRoute">Confirm Programmatic Route</button>
   <ul>
     <user-item v-for="user in users" :key="user.id" :name="user.fullName" :role="user.role"></user-item>
   </ul>
@@ -12,6 +13,11 @@ export default {
     UserItem,
   },
   inject: ['users'],
+  methods: {
+    programRoute() {
+      this.$router.push('/teams')
+    }
+  }
 };
 </script>
 
